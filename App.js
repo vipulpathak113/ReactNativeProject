@@ -8,12 +8,11 @@ import {
   Pressable,
   FlatList,
   Modal,
-  Image
+  Image,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 export default function App() {
-
   const [showModal, setShowModal] = useState(false);
   const [goalText, setGoalText] = useState("");
   const [goalList, setGoalList] = useState([]);
@@ -23,60 +22,66 @@ export default function App() {
   }
 
   function addGoal() {
-    setGoalList((currGoalList) => [...currGoalList, {id:Math.random().toString(),text:goalText}]);
+    setGoalList((currGoalList) => [
+      ...currGoalList,
+      { id: Math.random().toString(), text: goalText },
+    ]);
     closeModal();
   }
 
-  function deleteGoal(id){
-    setGoalList((currGoalList=> currGoalList.filter(item=>item.id!=id)))
+  function deleteGoal(id) {
+    setGoalList((currGoalList) => currGoalList.filter((item) => item.id != id));
   }
 
-  function closeModal(){
+  function closeModal() {
     setShowModal(false);
   }
 
-  function openModal(){
+  function openModal() {
     setShowModal(true);
   }
 
   return (
-   <>
-    <StatusBar style="light" />
-    <View style={styles.container}>
-      <Button title="Add New Goal" color={'#729ad9'} onPress={openModal} />
-      <Modal visible={showModal} animationType="slide">
-      <View style={styles.viewContainer}>
-      <Image style={styles.imageContainer} source={require('./assets/images/goal.png')}/>
-        <TextInput
-          placeholder="Your course goal"
-          style={styles.textContainer}
-          onChangeText={handleGoalChange}
-        />
-        <View style={styles.btnContainer}>
-        <Button title="Add Goal" color={'#729ad9'} onPress={addGoal} />
-        <Button title="Cancel" color={"red"} onPress={closeModal} />
+    <>
+      <StatusBar style="light" />
+      <View style={styles.container}>
+        <Button title="Add New Goal" color={"#729ad9"} onPress={openModal} />
+        <Modal visible={showModal} animationType="slide">
+          <View style={styles.viewContainer}>
+            <Image
+              style={styles.imageContainer}
+              source={require("./assets/images/goal.png")}
+            />
+            <TextInput
+              placeholder="Your course goal"
+              style={styles.textContainer}
+              onChangeText={handleGoalChange}
+            />
+            <View style={styles.btnContainer}>
+              <Button title="Add Goal" color={"#729ad9"} onPress={addGoal} />
+              <Button title="Cancel" color={"red"} onPress={closeModal} />
+            </View>
+          </View>
+        </Modal>
+        <View style={styles.goalsContainer}>
+          <FlatList
+            alwaysBounceVertical={false}
+            data={goalList}
+            renderItem={(itemData) => {
+              return (
+                <Pressable onPress={deleteGoal.bind(this, itemData.item.id)}>
+                  <View style={styles.goalItem}>
+                    <Text style={styles.goalText}>{itemData.item.text}</Text>
+                  </View>
+                </Pressable>
+              );
+            }}
+            keyExtractor={(item, index) => {
+              return item.id;
+            }}
+          />
         </View>
       </View>
-      </Modal>
-      <View style={styles.goalsContainer}>
-        <FlatList
-          alwaysBounceVertical={false}
-          data={goalList}
-          renderItem={(itemData) => {
-            return (
-              <Pressable onPress={deleteGoal.bind(this,itemData.item.id)}>
-                <View style={styles.goalItem}>
-                  <Text style={styles.goalText}>{itemData.item.text}</Text>
-                </View>
-              </Pressable>
-            );
-          }}
-          keyExtractor={(item, index) => {
-            return item.id;
-          }}
-        />
-      </View>
-    </View>
     </>
   );
 }
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
-    backgroundColor:"#2c25aa",
+    backgroundColor: "#2c25aa",
   },
 
   viewContainer: {
@@ -94,21 +99,21 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor:'#311b6b',
-    padding:8
+    backgroundColor: "#311b6b",
+    padding: 8,
   },
 
-  btnContainer:{
-    flexDirection: 'row',
-    width:'60%',
-    marginTop:6,
-    justifyContent:"space-between"
+  btnContainer: {
+    flexDirection: "row",
+    width: "60%",
+    marginTop: 6,
+    justifyContent: "space-between",
   },
 
-  imageContainer:{
-    height:200,
-    width:200,
-    margin:20
+  imageContainer: {
+    height: 150,
+    width: 150,
+    margin: 20,
   },
 
   textContainer: {
@@ -117,7 +122,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     padding: 16,
-    backgroundColor:"#a7b7d1"
+    backgroundColor: "#a7b7d1",
   },
   goalsContainer: {
     flex: 5,
