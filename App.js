@@ -9,6 +9,10 @@ import {
   FlatList,
   Modal,
   Image,
+  RefreshControl,
+  SectionList,
+  KeyboardAvoidingView,
+  ToastAndroid
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
@@ -16,6 +20,18 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [goalText, setGoalText] = useState("");
   const [goalList, setGoalList] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
+  const DATA = [
+    {
+      title: "Title1",
+      data: ["1","2","3"],
+    },
+    {
+      title: "Title2",
+      data: ["3","4","5"],
+    },
+  ];
 
   function handleGoalChange(text) {
     setGoalText(text);
@@ -41,13 +57,33 @@ export default function App() {
     setShowModal(true);
   }
 
+  function handleRefresh() {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 2000);
+  }
+
+  function handleTestPress(){
+
+    ToastAndroid.show('Text should be gretaer than 3',ToastAndroid.SHORT)
+  }
+
   return (
     <>
       <StatusBar style="light" />
       <View style={styles.container}>
         <Button title="Add New Goal" color={"#729ad9"} onPress={openModal} />
+        <Button title="Testingg" color={"#729ad9"} onPress={handleTestPress} />
+        <Pressable onPressIn={()=>{console.log("pressin")}}
+        onPressOut={()=>{console.log("pressout")}}
+        onPress={()=>{console.log("press")}}
+        android_ripple={{color:"red"}}
+        >
+          <Text style={{color:"white",textAlign:"center"}}>Pressable</Text>
+        </Pressable>
         <Modal visible={showModal} animationType="slide">
-          <View style={styles.viewContainer}>
+          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.viewContainer}>
             <Image
               style={styles.imageContainer}
               source={require("./assets/images/goal.png")}
@@ -56,15 +92,25 @@ export default function App() {
               placeholder="Your course goal"
               style={styles.textContainer}
               onChangeText={handleGoalChange}
+              clearButtonMode="while-editing"
             />
             <View style={styles.btnContainer}>
               <Button title="Add Goal" color={"#729ad9"} onPress={addGoal} />
               <Button title="Cancel" color={"red"} onPress={closeModal} />
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </Modal>
         <View style={styles.goalsContainer}>
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={handleRefresh}
+                title="Loading..."
+                size="large"
+                colors={["red"]}
+              />
+            }
             alwaysBounceVertical={false}
             data={goalList}
             renderItem={(itemData) => {
@@ -81,6 +127,16 @@ export default function App() {
             }}
           />
         </View>
+        {/* to use when have nested data else use flat list */}
+        <SectionList
+          sections={DATA}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.header}>{title}</Text>
+          )}
+          renderItem={({ item }) => {
+            return <Text style={styles.goalText}>{item}</Text>;
+          }}
+        />
       </View>
     </>
   );
