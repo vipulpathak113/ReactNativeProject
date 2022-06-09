@@ -12,7 +12,8 @@ import {
   RefreshControl,
   SectionList,
   KeyboardAvoidingView,
-  ToastAndroid
+  ToastAndroid,
+  ImageBackground
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
@@ -25,11 +26,11 @@ export default function App() {
   const DATA = [
     {
       title: "Title1",
-      data: ["1","2","3"],
+      data: ["1", "2", "3"],
     },
     {
       title: "Title2",
-      data: ["3","4","5"],
+      data: ["3", "4", "5"],
     },
   ];
 
@@ -64,26 +65,35 @@ export default function App() {
     }, 2000);
   }
 
-  function handleTestPress(){
-
-    ToastAndroid.show('Text should be gretaer than 3',ToastAndroid.SHORT)
+  function handleTestPress() {
+    ToastAndroid.show("Text should be greater than 3", ToastAndroid.SHORT);
   }
 
   return (
     <>
       <StatusBar style="light" />
-      <View style={styles.container}>
+      <ImageBackground  source={{uri:"https://wallpaperaccess.com/full/4285634.jpg"}} style={styles.container}>
         <Button title="Add New Goal" color={"#729ad9"} onPress={openModal} />
         <Button title="Testingg" color={"#729ad9"} onPress={handleTestPress} />
-        <Pressable onPressIn={()=>{console.log("pressin")}}
-        onPressOut={()=>{console.log("pressout")}}
-        onPress={()=>{console.log("press")}}
-        android_ripple={{color:"red"}}
+        <Pressable
+          onPressIn={() => {
+            console.log("pressin");
+          }}
+          onPressOut={() => {
+            console.log("pressout");
+          }}
+          onPress={() => {
+            console.log("press");
+          }}
+          android_ripple={{ color: "red" }}
         >
-          <Text style={{color:"white",textAlign:"center"}}>Pressable</Text>
+          <Text style={{ color: "white", textAlign: "center" }}>Pressable</Text>
         </Pressable>
         <Modal visible={showModal} animationType="slide">
-          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.viewContainer}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.viewContainer}
+          >
             <Image
               style={styles.imageContainer}
               source={require("./assets/images/goal.png")}
@@ -137,7 +147,7 @@ export default function App() {
             return <Text style={styles.goalText}>{item}</Text>;
           }}
         />
-      </View>
+      </ImageBackground>
     </>
   );
 }
